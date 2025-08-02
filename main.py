@@ -86,4 +86,4 @@ def main():
 
     for channel_name, rss_url in CHANNELS.items():
         print(f"\nChecking channel: {channel_name}")
-        feed = feedparser.
+        feed = feedparser.parse(rss_url)
