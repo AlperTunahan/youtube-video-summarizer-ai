@@ -1,0 +1,52 @@
+name: YouTube Video Summarizer
+
+on:
+  schedule:
+    # This is set to run every 2 hours.
+    # You can change the cron schedule. For example, to run every hour: '0 * * * *'
+    - cron: '0 */2 * * *'
+  
+  # This line allows you to run the workflow manually from the Actions tab.
+  workflow_dispatch:
+
+jobs:
+  summarize-videos:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checks out your repository's code so the job can access it.
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Step 2: Sets up a Python 3.10 environment.
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      # Step 3: Installs the Python libraries required by the script.
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install feedparser youtube-transcript-api google-generativeai
+
+      # Step 4: Runs the Python script. It passes the API key from GitHub Secrets to the script.
+      - name: Run summarization script
+        run: python main.py
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+
+      # Step 5: Commits the new summary files and the updated list of processed videos back to your repository.
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git pull # Pull latest changes to avoid conflicts
+          git add -A
+          # The following line checks if there are any changes. If not, it won't create an empty commit.
+          if ! git diff-index --quiet HEAD; then
+            git commit -m "Add new YouTube summaries"
+            git push
+          else
+            echo "No changes found, skipping commit."
+          fi
