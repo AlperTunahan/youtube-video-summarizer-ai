@@ -55,9 +55,10 @@ def get_transcript(video_id):
 
 def summarize_text(transcript, title):
     """Summarizes the given text using the Gemini API."""
-    # This prompt is in Turkish because we want the final summary to be in Turkish.
-    # You can change this to English if you want English summaries.
-    prompt = f """
+    
+    # We create the prompt as a standard multi-line string, without the 'f' prefix.
+    # We use placeholders like {title} and {transcript}.
+    prompt_template = """
     Aşağıdaki metin, "{title}" başlıklı bir YouTube videosunun transkriptidir.
     Bu metni, ana fikirleri ve önemli noktaları içerecek şekilde, profesyonel bir dille ve madde madde olacak şekilde Türkçe olarak özetle.
     Özetin başına videonun ana temasını anlatan kısa bir paragraf ekle.
@@ -66,8 +67,12 @@ def summarize_text(transcript, title):
     {transcript}
     """
     
+    # We use the .format() method to safely insert our variables into the placeholders.
+    # This bypasses the editor's f-string highlighting bug.
+    final_prompt = prompt_template.format(title=title, transcript=transcript)
+    
     try:
-        response = model.generate_content(prompt)
+        response = model.generate_content(final_prompt)
         return response.text
     except Exception as e:
         print(f"Error: Could not summarize with Gemini API. Reason: {e}")
