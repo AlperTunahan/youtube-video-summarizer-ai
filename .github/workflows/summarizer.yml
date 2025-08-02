@@ -12,6 +12,8 @@ on:
 jobs:
   summarize-videos:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       # Step 1: Checks out your repository's code so the job can access it.
