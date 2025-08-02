@@ -57,7 +57,7 @@ def summarize_text(transcript, title):
     """Summarizes the given text using the Gemini API."""
     # This prompt is in Turkish because we want the final summary to be in Turkish.
     # You can change this to English if you want English summaries.
-    prompt = f"""
+    prompt = f """
     Aşağıdaki metin, "{title}" başlıklı bir YouTube videosunun transkriptidir.
     Bu metni, ana fikirleri ve önemli noktaları içerecek şekilde, profesyonel bir dille ve madde madde olacak şekilde Türkçe olarak özetle.
     Özetin başına videonun ana temasını anlatan kısa bir paragraf ekle.
@@ -65,6 +65,7 @@ def summarize_text(transcript, title):
     METİN:
     {transcript}
     """
+    
     try:
         response = model.generate_content(prompt)
         return response.text
