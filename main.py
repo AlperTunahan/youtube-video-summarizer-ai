@@ -85,6 +85,11 @@ def sanitize_filename(name):
 # --- MAIN PROCESS ---
 
 def main():
+    # --- YENİ TEST SATIRLARI ---
+    with open("test_dosyasi.txt", "w") as f:
+        f.write("Bu bir testtir. Script bu satira ulasti.")
+    # --- TEST SATIRLARI BİTTİ ---
+    
     print("Starting process...")
     SUMMARIES_DIR.mkdir(exist_ok=True)
     processed_videos = get_processed_videos()
@@ -93,3 +98,4 @@ def main():
     for channel_name, rss_url in CHANNELS.items():
         print(f"\nChecking channel: {channel_name}")
         feed = feedparser.parse(rss_url)
+        
